@@ -1,5 +1,6 @@
 from peewee import *
 from flask import Flask, url_for, render_template, request, redirect, session
+import traceback
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
@@ -62,6 +63,7 @@ def Login():
        
 
         except:
+            print(traceback.format_exc())
             return 'INCORRECT LOGIN'
 
 @app.route('/register/', methods=['GET', 'POST'])
