@@ -103,7 +103,7 @@ def logout():
 
 if __name__ == '__main__':
 
-    app.secret_key = 'this is my very own Secret'
+    app.secret_key = 'EWYjFeHdFUgiiyloyoyoyoiof7fo'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
 
