@@ -1,6 +1,5 @@
 from peewee import *
 from flask import Flask, url_for, render_template, request, redirect, session
-from email.utils import parseaddr
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
@@ -51,12 +50,17 @@ def Login():
         passwd = request.form['password']
         
         try:
+            
+
             l = login.get((login.USERNAME == name) & (login.PASSWORD == passwd)).PASSWORD
             if l is not None:
                 session['logged_in'] = True
                 return redirect(url_for('home'))
             else:
                 return 'INCORRECT LOGIN'
+
+       
+
         except:
             return 'INCORRECT LOGIN'
 
@@ -73,7 +77,6 @@ def register():
         try:
             
             if name=="" or passwd == "" or firstname== "" or lastname == "" or email == "":
-                
                 raise NameError
 
             user.create(USERNAME=name,FIRSTNAME=firstname,LASTNAME=lastname,EMAIL=email,PASSWORD=passwd)
