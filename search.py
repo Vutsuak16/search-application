@@ -1,9 +1,11 @@
-from flask import Flask
 from peewee import *
-
+from flask import Flask, url_for, render_template, request, redirect, session
+from email.utils import parseaddr
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
+
+app = Flask(__name__)
 
 class BaseModel(Model):
 
@@ -12,7 +14,7 @@ class BaseModel(Model):
 
 class user(BaseModel):
     id=IntegerField(primary_key=True)
-    USERNAME = CharField(max_length=50)
+    USERNAME = CharField(max_length=50,unique=True)
     FIRSTNAME = CharField(max_length=50)
     LASTNAME = CharField(max_length=50)
     EMAIL = CharField(max_length=50,unique=True)
@@ -22,27 +24,82 @@ class user(BaseModel):
 
 class login(BaseModel):
     id=IntegerField(primary_key=True)
-    USERNAME = CharField(max_length=50)
+    USERNAME = CharField(max_length=50,unique=True)
     PASSWORD = CharField(max_length=50)
    
-'''
-person, created = user.get_or_create(
-    first_name=first_name,
-    last_name=last_name,
-    defaults={'dob': dob, 'favorite_color': 'green'})'''
 
-#user.create(USERNAME='chaplin6',FIRSTNAME='Charlie',LASTNAME="Chaplin",EMAIL="chaplin@gmail.com",PASSWORD="chap43")
-#login.create(USERNAME='chaplin6',PASSWORD='chap43')
-#havent set username unique as validating both username and password
-try:
-    l = login.get((login.USERNAME == "chaplin6") & (login.PASSWORD =="chap43")).PASSWORD
-    print(l)
-except:
-    print("register")
+@app.route('/', methods=['GET', 'POST'])
+def home():
 
-try:
-    user.create(USERNAME='chaplin6',FIRSTNAME='Charlie',LASTNAME="Chaplin",EMAIL="chaplin@gmail.com",PASSWORD="chap43")
-except:
-    print("email already in use")
+    if  session.get('logged_in'):
+        if request.method == 'POST':
+            search = request.form['search']
+            print(search)
+        return render_template('index.html')
+    else:
+        return render_template('login.html')
+        
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def Login():
+    
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        name = request.form['username']
+        passwd = request.form['password']
+        
+        try:
+            l = login.get((login.USERNAME == name) & (login.PASSWORD == passwd)).PASSWORD
+            if l is not None:
+                session['logged_in'] = True
+                return redirect(url_for('home'))
+            else:
+                return 'INCORRECT LOGIN'
+        except:
+            return 'INCORRECT LOGIN'
+
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    
+    if request.method == 'POST':
+        name = request.form['username']
+        passwd = request.form['password']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        email = request.form['email']
+
+        try:
+            
+            if name=="" or passwd == "" or firstname== "" or lastname == "" or email == "":
+                
+                raise NameError
+
+            user.create(USERNAME=name,FIRSTNAME=firstname,LASTNAME=lastname,EMAIL=email,PASSWORD=passwd)
+            login.create(USERNAME=name,PASSWORD=passwd)
+
+        except NameError:
+            return "all fields are mandatory"
+        except:
+            return "username or email already in use"
+        
+
+        return render_template('login.html')
+    return render_template('register.html')
+
+@app.route("/logout")
+def logout():
+    
+    session['logged_in'] = False
+    return redirect(url_for('home'))
+
+
+
+if __name__ == '__main__':
+
+    app.secret_key = 'this is my very own Secret'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.run(host='0.0.0.0',port=5000,debug=True)
 
 
