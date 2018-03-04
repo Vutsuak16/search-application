@@ -1,11 +1,13 @@
 from peewee import *
 from flask import Flask, url_for, render_template, request, redirect, session
+from flask.ext.session import Session
 import traceback
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
 
 app = Flask(__name__)
+sess= Session()
 
 class BaseModel(Model):
 
@@ -105,6 +107,7 @@ if __name__ == '__main__':
 
     app.secret_key = 'EWYjFeHdFUgiiyloyoyoyoiof7fo'
     app.config['SESSION_TYPE'] = 'filesystem'
+    sess.init_app(app)
     app.run(debug=True)
 
 
