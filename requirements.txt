@@ -2,3 +2,4 @@ pymysql
 peewee
 flask
 gunicorn
+elasticsearch_dsl

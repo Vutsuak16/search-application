@@ -35,6 +35,7 @@ class post(Document):
 	time=StringField(max_length=120,required=True)
 	score=StringField(max_length=50,required=True)
 
+#puts data in mongodb
 connect( db='hackerycom', username='vutsuak', password='hn', host='ds253918.mlab.com:53918')
 
 
@@ -44,3 +45,9 @@ for i in range(len(score)):
 		p.save()
 	except:
 		continue
+
+
+
+
+#curl -H 'Content-Type: application/x-ndjson' -XPOST 'https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com/news/posts/_bulk?pretty' --data-binary @l.json
+#curl -XGET 'https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com/newss/posts/_search?q=python'
