@@ -1,6 +1,9 @@
 from peewee import *
 from flask import Flask, url_for, render_template, request, redirect, session
-import traceback
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
+from mongoengine import *
+
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
@@ -35,7 +38,12 @@ def home():
     if  session.get('logged_in'):
         if request.method == 'POST':
             search = request.form['search']
-            print(search)
+            s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com'),index="newss")
+            k = s.query("match", title=search)
+            response = k.execute()
+            for hit in k:
+                print(hit.title)
+                print(hit.id)
         return render_template('index.html')
     else:
         return render_template('login.html')
@@ -61,10 +69,7 @@ def Login():
             else:
                 return 'INCORRECT LOGIN'
 
-       
-
         except:
-            print(traceback.format_exc())
             return 'INCORRECT LOGIN'
 
 @app.route('/register/', methods=['GET', 'POST'])
@@ -108,6 +113,8 @@ if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
 
     app.run(debug=True)
+
+
 
 
 
