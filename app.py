@@ -37,16 +37,16 @@ def home():
 
     if  session.get('logged_in'):
         if request.method == 'POST':
-        	search = request.form['search']
-        	s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com',use_ssl=True, ca_certs=certifi.where()),index="newss")
-        	k = s.query("match", title=search)
-        	l=[]
-        	for i in k.scan():
-        		l.append(i.title)
-        	if len(l) != 0:
-        		return render_template('results.html',users=k)
-        	else:
-        		return "Your search - "+ str(search) +"- did not match any documents."
+            search = request.form['search']
+            s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com',use_ssl=True, ca_certs=certifi.where()),index="newss")
+            k = s.query("match", title=search)
+            l=[]
+            for i in k.scan():
+                l.append(i.title)
+            if len(l)!=0:
+                return render_template('results.html',users=k)
+            else:
+               return "Your search - "+ str(search) +"- did not match any documents."
         else:
             return render_template('index.html')
     else:
@@ -119,6 +119,7 @@ if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
 
     app.run(debug=True)
+
 
 
 
