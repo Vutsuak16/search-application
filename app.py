@@ -3,6 +3,7 @@ from flask import Flask, url_for, render_template, request, redirect, session
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from mongoengine import *
+import certifi
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
