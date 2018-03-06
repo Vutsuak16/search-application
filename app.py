@@ -37,7 +37,7 @@ def home():
     if  session.get('logged_in'):
         if request.method == 'POST':
             search = request.form['search']
-            s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com'),index="newss")
+            s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com',use_ssl=True, ca_certs=certifi.where()),index="newss")
             k = s.query("match", title=search)
             return render_template('results.html',users=k)
         else:
