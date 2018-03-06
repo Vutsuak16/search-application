@@ -51,3 +51,4 @@ for i in range(len(score)):
 
 #curl -H 'Content-Type: application/x-ndjson' -XPOST 'https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com/news/posts/_bulk?pretty' --data-binary @l.json
 #curl -XGET 'https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com/newss/posts/_search?q=python'
+#https://api.mlab.com/api/1/databases/hackerycom/collections/post/5a9c6b76c5e7b6078c266dbb?apiKey=vTPS_XjrufT1HcOTKxOcQKRlf4hrc9Nb

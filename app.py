@@ -1,9 +1,9 @@
 from peewee import *
-from flask import Flask, url_for, render_template, request, redirect, session
+from flask import Flask, url_for, render_template, request, redirect, session,flash
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from mongoengine import *
-
+import json
 
 mysql_db = MySQLDatabase('sql9224506', user='sql9224506', password='NqDZ2Yd2yg',
                          host='sql9.freemysqlhosting.net', port=3306)
@@ -40,14 +40,14 @@ def home():
             search = request.form['search']
             s = Search(using=Elasticsearch('https://site:410cc42245545394a3bffceebf1c714c@thorin-us-east-1.searchly.com'),index="newss")
             k = s.query("match", title=search)
-            response = k.execute()
-            for hit in k:
-                print(hit.title)
-                print(hit.id)
-        return render_template('index.html')
+            return render_template('results.html',users=k)
+        else:
+            return render_template('index.html')
     else:
         return render_template('login.html')
-        
+
+
+       
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -58,19 +58,17 @@ def Login():
     else:
         name = request.form['username']
         passwd = request.form['password']
-        
         try:
-            
-
             l = login.get((login.USERNAME == name) & (login.PASSWORD == passwd)).PASSWORD
             if l is not None:
                 session['logged_in'] = True
                 return redirect(url_for('home'))
             else:
-                return 'INCORRECT LOGIN'
+                return "INCORRECT LOGIN"
+                
 
         except:
-            return 'INCORRECT LOGIN'
+            return "INCORRECT LOGIN"
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -104,6 +102,12 @@ def logout():
     
     session['logged_in'] = False
     return redirect(url_for('home'))
+
+@app.route('/mongo_details')
+def mongo_details():
+    
+    post = request.args.get('post', 0)
+    return json.dumps({'selected post': str(post)});
 
 
 
