@@ -3,3 +3,5 @@ peewee
 flask
 gunicorn
 elasticsearch_dsl
+elasticsearch
+mongoengine
