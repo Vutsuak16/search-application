@@ -5,3 +5,4 @@ gunicorn
 elasticsearch_dsl
 elasticsearch
 mongoengine
+certifi
